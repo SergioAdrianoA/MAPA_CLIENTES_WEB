@@ -1,1 +1,16 @@
-
+[
+  {
+    "fantasia": "CASA LEAL",
+    "bairro": "CENTRO",
+    "cidade": "ITAITUBA",
+    "lat": -4.276,
+    "lng": -55.983
+  },
+  {
+    "fantasia": "ATACADO ASA BRANCA",
+    "bairro": "LIBERDADE",
+    "cidade": "ITAITUBA",
+    "lat": -4.285,
+    "lng": -55.991
+  }
+]
