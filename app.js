@@ -1,5 +1,19 @@
 // ========================================
-// MAPA BASE
+// ELEMENTOS HTML
+// ========================================
+
+const buscaInput =
+  document.getElementById(
+    'buscaCliente'
+  );
+
+const bairroSelect =
+  document.getElementById(
+    'filtroBairro'
+  );
+
+// ========================================
+// MAPA
 // ========================================
 
 const map = L.map('map').setView(
@@ -8,13 +22,14 @@ const map = L.map('map').setView(
 );
 
 // ========================================
-// OPEN STREET MAP
+// TILE LAYER
 // ========================================
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
-    attribution: '&copy; OpenStreetMap'
+    attribution:
+      '&copy; OpenStreetMap'
   }
 ).addTo(map);
 
@@ -26,16 +41,6 @@ const markers =
   L.markerClusterGroup();
 
 map.addLayer(markers);
-
-// ========================================
-// ELEMENTOS HTML
-// ========================================
-
-const buscaInput =
-  document.querySelector('input');
-
-const bairroSelect =
-  document.querySelector('select');
 
 // ========================================
 // BASE CLIENTES
@@ -50,6 +55,10 @@ let clientesBase = [];
 async function carregarClientes() {
 
   try {
+
+    // ========================================
+    // FETCH JSON
+    // ========================================
 
     const response =
       await fetch('clientes.json');
@@ -69,7 +78,7 @@ async function carregarClientes() {
     preencherBairros();
 
     // ========================================
-    // RENDERIZAR
+    // RENDERIZAR TODOS
     // ========================================
 
     renderizarClientes(
@@ -79,7 +88,7 @@ async function carregarClientes() {
   } catch (erro) {
 
     console.error(
-      'ERRO AO CARREGAR JSON'
+      'ERRO AO CARREGAR CLIENTES'
     );
 
     console.error(erro);
@@ -89,7 +98,7 @@ async function carregarClientes() {
 }
 
 // ========================================
-// PREENCHER SELECT BAIRROS
+// PREENCHER BAIRROS
 // ========================================
 
 function preencherBairros() {
@@ -102,34 +111,49 @@ function preencherBairros() {
     </option>
   `;
 
+  // ========================================
   // PEGAR BAIRROS ÚNICOS
+  // ========================================
 
   const bairros = [
+
     ...new Set(
 
-      clientesBase.map(cliente =>
-        cliente.bairro
-      )
+      clientesBase
+        .map(cliente =>
+          cliente.bairro
+        )
+        .filter(Boolean)
 
     )
+
   ];
 
+  // ========================================
   // ORDENAR
+  // ========================================
 
   bairros.sort();
 
-  // CRIAR OPTIONS
+  // ========================================
+  // ADICIONAR OPTIONS
+  // ========================================
 
   bairros.forEach(bairro => {
 
     const option =
-      document.createElement('option');
+      document.createElement(
+        'option'
+      );
 
     option.value = bairro;
 
-    option.textContent = bairro;
+    option.textContent =
+      bairro;
 
-    bairroSelect.appendChild(option);
+    bairroSelect.appendChild(
+      option
+    );
 
   });
 
@@ -141,7 +165,9 @@ function preencherBairros() {
 
 function renderizarClientes(clientes) {
 
-  // LIMPAR MARKERS
+  // ========================================
+  // LIMPAR CLUSTERS
+  // ========================================
 
   markers.clearLayers();
 
@@ -174,7 +200,7 @@ function renderizarClientes(clientes) {
       ) return;
 
       // ========================================
-      // MARKER
+      // CRIAR MARKER
       // ========================================
 
       const marker = L.marker([
@@ -231,12 +257,17 @@ function renderizarClientes(clientes) {
       `);
 
       // ========================================
-      // ADICIONAR
+      // ADICIONAR NO CLUSTER
       // ========================================
 
       markers.addLayer(marker);
 
     } catch (erroCliente) {
+
+      console.error(
+        'ERRO CLIENTE:',
+        cliente
+      );
 
       console.error(
         erroCliente
@@ -266,10 +297,14 @@ function renderizarClientes(clientes) {
 }
 
 // ========================================
-// FILTROS
+// APLICAR FILTROS
 // ========================================
 
 function aplicarFiltros() {
+
+  // ========================================
+  // VALORES
+  // ========================================
 
   const textoBusca =
     buscaInput.value
@@ -287,7 +322,7 @@ function aplicarFiltros() {
     clientesBase.filter(cliente => {
 
       // ========================================
-      // BUSCA TEXTO
+      // TEXTO BUSCA
       // ========================================
 
       const textoCliente = `
@@ -296,6 +331,7 @@ function aplicarFiltros() {
         ${cliente.razao || ''}
         ${cliente.bairro || ''}
         ${cliente.ramo || ''}
+        ${cliente.endereco || ''}
 
       `
       .toLowerCase();
@@ -324,7 +360,7 @@ function aplicarFiltros() {
     });
 
   // ========================================
-  // RENDERIZAR
+  // RENDERIZAR FILTRADOS
   // ========================================
 
   renderizarClientes(
