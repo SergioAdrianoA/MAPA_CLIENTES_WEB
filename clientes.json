@@ -1,23 +1,57 @@
 [
   {
+    "cod": 26004,
+    "razao": "LEAL E CIA LTDA",
     "fantasia": "CASA LEAL",
+    "ramo": "MAT CONSTRUCAO",
+    "cidade": "ITAITUBA",
     "bairro": "CENTRO",
-    "cidade": "ITAITUBA",
-    "lat": -4.276,
-    "lng": -55.983
+    "endereco": "RUA DR HUGO MENDONCA, 441",
+    "latitude": -4.2723219,
+    "longitude": -55.9798269
   },
   {
-    "fantasia": "ATACADO ASA BRANCA",
+    "cod": 61132,
+    "razao": "CIMCOP SA ENGENHARIA E CONSTRUCOES",
+    "fantasia": "CIMCOP ESTABELECIMENTO UNIFICADO",
+    "ramo": "MAT CONSTRUCAO",
+    "cidade": "BELO HORIZONTE",
+    "bairro": "CALIFORNIA",
+    "endereco": "RUA WALFRIDO MENDES, 400 - ANTIGA RUA E",
+    "latitude": -19.9310923,
+    "longitude": -44.0107891
+  },
+  {
+    "cod": 105051,
+    "razao": "V C A LIRA LTDA",
+    "fantasia": "ATACADAO ASA BRANCA",
+    "ramo": "ATACADO",
+    "cidade": "ITAITUBA",
     "bairro": "LIBERDADE",
-    "cidade": "ITAITUBA",
-    "lat": -4.285,
-    "lng": -55.991
+    "endereco": "TRAVESSA PRIMEIRA, SN",
+    "latitude": -4.2711538,
+    "longitude": -55.9900265
   },
   {
-    "fantasia": "FARMACIAS FTB",
-    "bairro": "COMERCIO",
+    "cod": 138206,
+    "razao": "A C DE MELO ARAUJO",
+    "fantasia": "C. M. MOTOS",
+    "ramo": "MOTOPECAS",
     "cidade": "ITAITUBA",
-    "lat": -4.280,
-    "lng": -55.987
+    "bairro": "BELA VISTA",
+    "endereco": "RUA RICARDO JOSE FERREIRA, 787",
+    "latitude": -4.2569579,
+    "longitude": -55.9912206
+  },
+  {
+    "cod": 314740,
+    "razao": "HIDRAUMAQ PEA?AS E EQUIPAMENTOS LTDA",
+    "fantasia": "HIDRAUMAQ",
+    "ramo": "AUTOPECAS",
+    "cidade": "ITAITUBA",
+    "bairro": "FLORESTA",
+    "endereco": "RODOVIA ROD TRANSAMAZONICA, S/N - KM 01",
+    "latitude": -4.2740607,
+    "longitude": -55.9864418
   }
 ]
