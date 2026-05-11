@@ -2,7 +2,10 @@
 // MAPA BASE
 // ========================================
 
-const map = L.map('map').setView([-4.276, -55.983], 12);
+const map = L.map('map').setView(
+  [-4.2723219, -55.9798269],
+  13
+);
 
 // ========================================
 // OPEN STREET MAP
@@ -19,7 +22,8 @@ L.tileLayer(
 // CLUSTER
 // ========================================
 
-const markers = L.markerClusterGroup();
+const markers =
+  L.markerClusterGroup();
 
 // ========================================
 // CARREGAR CLIENTES
@@ -29,27 +33,56 @@ async function carregarClientes() {
 
   try {
 
-    const response = await fetch('clientes.json');
+    const response =
+      await fetch('clientes.json');
 
-    const clientes = await response.json();
+    const clientes =
+      await response.json();
 
     console.log(clientes);
 
+    // ========================================
+    // LOOP CLIENTES
+    // ========================================
+
     clientes.forEach(cliente => {
 
-      // IGNORA SEM COORDENADAS
-      if (!cliente.lat || !cliente.lng) return;
+      // ========================================
+      // IGNORAR SEM COORDENADAS
+      // ========================================
 
-      // CRIAR MARCADOR
+      if (
+        !cliente.latitude ||
+        !cliente.longitude
+      ) return;
+
+      // ========================================
+      // MARCADOR
+      // ========================================
+
       const marker = L.marker([
-        cliente.lat,
-        cliente.lng
+
+        cliente.latitude,
+        cliente.longitude
+
       ]);
 
+      // ========================================
       // POPUP
+      // ========================================
+
       marker.bindPopup(`
-        <div style="min-width:200px">
-          <h3>${cliente.fantasia}</h3>
+
+        <div style="min-width:220px">
+
+          <h3>
+            ${cliente.fantasia}
+          </h3>
+
+          <p>
+            <b>Ramo:</b>
+            ${cliente.ramo}
+          </p>
 
           <p>
             <b>Bairro:</b>
@@ -61,28 +94,45 @@ async function carregarClientes() {
             ${cliente.cidade}
           </p>
 
+          <p>
+            <b>Endereço:</b>
+            ${cliente.endereco}
+          </p>
+
           <a
-            href="https://www.google.com/maps?q=${cliente.lat},${cliente.lng}"
+            href="https://www.google.com/maps?q=${cliente.latitude},${cliente.longitude}"
             target="_blank"
           >
             Abrir no Google Maps
           </a>
+
         </div>
+
       `);
 
-      // ADICIONA NO CLUSTER
+      // ========================================
+      // ADICIONAR
+      // ========================================
+
       markers.addLayer(marker);
 
     });
 
-    // ADICIONA CLUSTERS NO MAPA
+    // ========================================
+    // ADICIONAR CLUSTERS
+    // ========================================
+
     map.addLayer(markers);
 
-  } catch (error) {
+    console.log(
+      'CLIENTES CARREGADOS'
+    );
+
+  } catch (erro) {
 
     console.error(
       'ERRO AO CARREGAR CLIENTES',
-      error
+      erro
     );
 
   }
