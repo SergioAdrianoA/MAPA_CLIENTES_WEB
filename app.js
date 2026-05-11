@@ -8,7 +8,7 @@ const map = L.map('map').setView(
 );
 
 // ========================================
-// OPEN STREET MAP
+// CAMADA OPENSTREETMAP
 // ========================================
 
 L.tileLayer(
@@ -33,13 +33,20 @@ async function carregarClientes() {
 
   try {
 
+    // ========================================
+    // FETCH JSON
+    // ========================================
+
     const response =
       await fetch('clientes.json');
 
     const clientes =
       await response.json();
 
-    console.log(clientes);
+    console.log(
+      'CLIENTES:',
+      clientes
+    );
 
     // ========================================
     // LOOP CLIENTES
@@ -47,74 +54,129 @@ async function carregarClientes() {
 
     clientes.forEach(cliente => {
 
-      // ========================================
-      // IGNORAR SEM COORDENADAS
-      // ========================================
+      try {
 
-      if (
-        !cliente.latitude ||
-        !cliente.longitude
-      ) return;
+        // ========================================
+        // VALIDAR COORDENADAS
+        // ========================================
 
-      // ========================================
-      // MARCADOR
-      // ========================================
+        if (
+          cliente.latitude == null ||
+          cliente.longitude == null
+        ) {
 
-      const marker = L.marker([
+          console.warn(
+            'SEM COORDENADAS:',
+            cliente
+          );
 
-        cliente.latitude,
-        cliente.longitude
+          return;
 
-      ]);
+        }
 
-      // ========================================
-      // POPUP
-      // ========================================
+        // ========================================
+        // CONVERTER PARA NUMBER
+        // ========================================
 
-      marker.bindPopup(`
+        const latitude =
+          Number(cliente.latitude);
 
-        <div style="min-width:220px">
+        const longitude =
+          Number(cliente.longitude);
 
-          <h3>
-            ${cliente.fantasia}
-          </h3>
+        // ========================================
+        // VALIDAR NUMBER
+        // ========================================
 
-          <p>
-            <b>Ramo:</b>
-            ${cliente.ramo}
-          </p>
+        if (
+          isNaN(latitude) ||
+          isNaN(longitude)
+        ) {
 
-          <p>
-            <b>Bairro:</b>
-            ${cliente.bairro}
-          </p>
+          console.warn(
+            'COORDENADAS INVÁLIDAS:',
+            cliente
+          );
 
-          <p>
-            <b>Cidade:</b>
-            ${cliente.cidade}
-          </p>
+          return;
 
-          <p>
-            <b>Endereço:</b>
-            ${cliente.endereco}
-          </p>
+        }
 
-          <a
-            href="https://www.google.com/maps?q=${cliente.latitude},${cliente.longitude}"
-            target="_blank"
-          >
-            Abrir no Google Maps
-          </a>
+        // ========================================
+        // CRIAR MARKER
+        // ========================================
 
-        </div>
+        const marker = L.marker([
+          latitude,
+          longitude
+        ]);
 
-      `);
+        // ========================================
+        // POPUP
+        // ========================================
 
-      // ========================================
-      // ADICIONAR
-      // ========================================
+        marker.bindPopup(`
 
-      markers.addLayer(marker);
+          <div style="min-width:220px">
+
+            <h3>
+              ${cliente.fantasia || ''}
+            </h3>
+
+            <p>
+              <b>Razão:</b><br>
+              ${cliente.razao || ''}
+            </p>
+
+            <p>
+              <b>Ramo:</b>
+              ${cliente.ramo || ''}
+            </p>
+
+            <p>
+              <b>Bairro:</b>
+              ${cliente.bairro || ''}
+            </p>
+
+            <p>
+              <b>Cidade:</b>
+              ${cliente.cidade || ''}
+            </p>
+
+            <p>
+              <b>Endereço:</b><br>
+              ${cliente.endereco || ''}
+            </p>
+
+            <a
+              href="https://www.google.com/maps?q=${latitude},${longitude}"
+              target="_blank"
+            >
+              Abrir no Google Maps
+            </a>
+
+          </div>
+
+        `);
+
+        // ========================================
+        // ADICIONAR NO CLUSTER
+        // ========================================
+
+        markers.addLayer(marker);
+
+      } catch (erroCliente) {
+
+        console.error(
+          'ERRO CLIENTE:',
+          cliente
+        );
+
+        console.error(
+          erroCliente
+        );
+
+      }
 
     });
 
@@ -124,23 +186,42 @@ async function carregarClientes() {
 
     map.addLayer(markers);
 
+    // ========================================
+    // AJUSTAR ZOOM AUTOMÁTICO
+    // ========================================
+
+    if (
+      markers.getLayers().length > 0
+    ) {
+
+      map.fitBounds(
+        markers.getBounds(),
+        {
+          padding: [40, 40]
+        }
+      );
+
+    }
+
     console.log(
-      'CLIENTES CARREGADOS'
+      'CLIENTES CARREGADOS:',
+      markers.getLayers().length
     );
 
   } catch (erro) {
 
     console.error(
-      'ERRO AO CARREGAR CLIENTES',
-      erro
+      'ERRO AO CARREGAR JSON'
     );
+
+    console.error(erro);
 
   }
 
 }
 
 // ========================================
-// INICIAR
+// INICIAR SISTEMA
 // ========================================
 
 carregarClientes();
