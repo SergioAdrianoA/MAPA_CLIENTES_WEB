@@ -1,1 +1,63 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MAPA CLIENTES</title>
+
+  <!-- LEAFLET -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+
+  <!-- MARKER CLUSTER -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"
+  />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- TOPO -->
+  <header class="topo">
+    <h1>MAPA DE CLIENTES</h1>
+
+    <div class="acoes">
+      <input
+        type="text"
+        id="busca"
+        placeholder="Buscar cliente..."
+      >
+
+      <select id="filtroBairro">
+        <option value="">Todos os bairros</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- MAPA -->
+  <div id="map"></div>
+
+  <!-- LEAFLET -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- MARKER CLUSTER -->
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+  <!-- APP -->
+  <script src="app.js"></script>
+
+</body>
+</html>
