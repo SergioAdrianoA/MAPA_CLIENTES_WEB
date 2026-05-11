@@ -1,1 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* TOPO */
+
+.topo {
+  height: 70px;
+  background: #0f172a;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+}
+
+.topo h1 {
+  font-size: 22px;
+}
+
+.acoes {
+  display: flex;
+  gap: 10px;
+}
+
+input,
+select {
+  height: 40px;
+  padding: 0 10px;
+
+  border: none;
+  border-radius: 8px;
+
+  outline: none;
+}
+
+/* MAPA */
+
+#map {
+  width: 100%;
+  height: calc(100vh - 70px);
+}
