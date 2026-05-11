@@ -1,63 +1,117 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>MAPA CLIENTES</title>
+  <meta charset="UTF-8" />
 
-  <!-- LEAFLET -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
   />
 
-  <!-- MARKER CLUSTER -->
+  <title>
+    MAPA DE CLIENTES
+  </title>
+
+  <!-- ===================================== -->
+  <!-- LEAFLET CSS -->
+  <!-- ===================================== -->
+
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- ===================================== -->
+  <!-- MARKER CLUSTER CSS -->
+  <!-- ===================================== -->
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
   />
 
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"
+    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
   />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <!-- ===================================== -->
+  <!-- CSS LOCAL -->
+  <!-- ===================================== -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
 </head>
 
 <body>
 
+  <!-- ===================================== -->
   <!-- TOPO -->
-  <header class="topo">
-    <h1>MAPA DE CLIENTES</h1>
+  <!-- ===================================== -->
 
-    <div class="acoes">
+  <div class="topbar">
+
+    <h1>
+      MAPA DE CLIENTES
+    </h1>
+
+    <!-- ===================================== -->
+    <!-- FILTROS -->
+    <!-- ===================================== -->
+
+    <div class="filtros">
+
+      <!-- BUSCA -->
+
       <input
         type="text"
-        id="busca"
+        id="buscaCliente"
         placeholder="Buscar cliente..."
-      >
+      />
+
+      <!-- BAIRROS -->
 
       <select id="filtroBairro">
-        <option value="">Todos os bairros</option>
-      </select>
-    </div>
-  </header>
 
+        <option value="">
+          Todos os bairros
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+  <!-- ===================================== -->
   <!-- MAPA -->
+  <!-- ===================================== -->
+
   <div id="map"></div>
 
-  <!-- LEAFLET -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- ===================================== -->
+  <!-- LEAFLET JS -->
+  <!-- ===================================== -->
 
-  <!-- MARKER CLUSTER -->
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- ===================================== -->
+  <!-- MARKER CLUSTER JS -->
+  <!-- ===================================== -->
+
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+  <!-- ===================================== -->
   <!-- APP -->
+  <!-- ===================================== -->
+
   <script src="app.js"></script>
 
 </body>
+
 </html>
