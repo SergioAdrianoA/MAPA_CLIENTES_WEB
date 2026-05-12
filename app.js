@@ -61,7 +61,10 @@ async function carregarClientes() {
     // ========================================
 
     const response =
-      await fetch('clientes.json');
+      await fetch(
+  'clientes.json?v=' +
+  Date.now()
+        ;
 
     clientesBase =
       await response.json();
