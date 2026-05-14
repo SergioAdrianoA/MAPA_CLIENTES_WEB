@@ -1,5 +1,6 @@
 /* ===================================================== */
 /* STYLE.CSS */
+/* MAPA_CLIENTES_WEB */
 /* ===================================================== */
 
 * {
@@ -66,6 +67,11 @@ body {
   align-items: center;
 }
 
+
+/* ===================================================== */
+/* INPUT BUSCA */
+/* ===================================================== */
+
 .filtros input {
 
   width: 240px;
@@ -81,6 +87,15 @@ body {
   font-size: 14px;
 
   outline: none;
+
+  background: #f8f9fc;
+
+  color: #222;
+}
+
+.filtros input::placeholder {
+
+  color: #777;
 }
 
 
@@ -93,6 +108,11 @@ body {
   position: relative;
 }
 
+
+/* ===================================================== */
+/* BOTÃO */
+/* ===================================================== */
+
 .dropdown-btn {
 
   width: 180px;
@@ -103,14 +123,28 @@ body {
 
   border-radius: 12px;
 
-  background: white;
+  background: #f8f9fc;
+
+  color: #111;
 
   cursor: pointer;
 
   font-size: 14px;
 
   font-weight: bold;
+
+  transition: 0.2s;
 }
+
+.dropdown-btn:hover {
+
+  background: #edf1ff;
+}
+
+
+/* ===================================================== */
+/* CONTEÚDO */
+/* ===================================================== */
 
 .dropdown-content {
 
@@ -128,16 +162,23 @@ body {
 
   overflow-y: auto;
 
-  background: white;
+  background: #ffffff;
 
-  border-radius: 12px;
+  border-radius: 14px;
 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
 
   padding: 10px;
 
   z-index: 9999;
+
+  color: #222;
 }
+
+
+/* ===================================================== */
+/* DROPDOWN ABERTO */
+/* ===================================================== */
 
 .dropdown.active .dropdown-content {
 
@@ -146,7 +187,7 @@ body {
 
 
 /* ===================================================== */
-/* CHECKBOXES */
+/* ITENS CHECKBOX */
 /* ===================================================== */
 
 .checkbox-item {
@@ -157,22 +198,75 @@ body {
 
   gap: 10px;
 
-  padding: 8px;
+  padding: 10px;
 
-  border-radius: 8px;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  color: #222;
+
+  font-size: 14px;
+
+  transition: 0.2s;
+}
+
+
+/* ===================================================== */
+/* HOVER */
+/* ===================================================== */
+
+.checkbox-item:hover {
+
+  background: #edf1ff;
+}
+
+
+/* ===================================================== */
+/* CHECKBOX */
+/* ===================================================== */
+
+.checkbox-item input[type="checkbox"] {
+
+  width: 16px;
+
+  height: 16px;
 
   cursor: pointer;
 }
 
-.checkbox-item:hover {
 
-  background: #f1f1f1;
+/* ===================================================== */
+/* TEXTO */
+/* ===================================================== */
+
+.checkbox-item span {
+
+  color: #222;
 }
 
-.checkbox-item input {
 
-  width: 16px;
-  height: 16px;
+/* ===================================================== */
+/* SCROLLBAR */
+/* ===================================================== */
+
+.dropdown-content::-webkit-scrollbar {
+
+  width: 8px;
+}
+
+.dropdown-content::-webkit-scrollbar-track {
+
+  background: #f1f1f1;
+
+  border-radius: 20px;
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+
+  background: #9aa4c7;
+
+  border-radius: 20px;
 }
 
 
@@ -185,4 +279,33 @@ body {
   width: 100%;
 
   height: calc(100vh - 90px);
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO */
+/* ===================================================== */
+
+@media (max-width: 1200px) {
+
+  .topbar {
+
+    height: auto;
+
+    padding: 15px;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .filtros {
+
+    flex-wrap: wrap;
+  }
+
+  #map {
+
+    height: calc(100vh - 180px);
+  }
 }
