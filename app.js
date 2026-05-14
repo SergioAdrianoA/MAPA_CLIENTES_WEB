@@ -1,393 +1,294 @@
-// ========================================
-// ELEMENTOS HTML
-// ========================================
+// =====================================================
+// APP.JS
+// MAPA_CLIENTES_WEB
+// =====================================================
 
-const buscaInput =
-  document.getElementById(
-    'buscaCliente'
-  );
 
-const bairroSelect =
-  document.getElementById(
-    'filtroBairro'
-  );
-
-// ========================================
+// =====================================================
 // MAPA
-// ========================================
+// =====================================================
 
 const map = L.map('map').setView(
-  [-4.2723219, -55.9798269],
+  [-4.2767, -55.9836],
   13
 );
 
-// ========================================
+
+// =====================================================
 // TILE LAYER
-// ========================================
+// =====================================================
 
 L.tileLayer(
+
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
   {
     attribution:
       '&copy; OpenStreetMap'
   }
+
 ).addTo(map);
 
-// ========================================
-// CLUSTER
-// ========================================
+
+// =====================================================
+// CLUSTERS
+// =====================================================
 
 const markers =
   L.markerClusterGroup();
 
-map.addLayer(markers);
 
-// ========================================
-// BASE CLIENTES
-// ========================================
+// =====================================================
+// ELEMENTOS
+// =====================================================
 
-let clientesBase = [];
+const buscaInput =
+  document.getElementById('busca');
 
-// ========================================
+const bairroFiltro =
+  document.getElementById('bairroFiltro');
+
+
+// =====================================================
+// CLIENTES
+// =====================================================
+
+let clientes = [];
+
+
+// =====================================================
 // CARREGAR CLIENTES
-// ========================================
+// =====================================================
 
 async function carregarClientes() {
 
   try {
 
-    // ========================================
-    // FETCH JSON
-    // ========================================
+    // =====================================================
+    // CACHE BUST
+    // =====================================================
 
-    const response =
-      await fetch(
-  'clientes.json?v=' +
-  Date.now()
-        ;
+    const response = await fetch(
 
-    clientesBase =
+      `clientes.json?v=${Date.now()}`
+    );
+
+    clientes =
       await response.json();
 
-    console.log(
-      'CLIENTES:',
-      clientesBase
-    );
+    renderizarClientes(clientes);
 
-    // ========================================
-    // PREENCHER BAIRROS
-    // ========================================
-
-    preencherBairros();
-
-    // ========================================
-    // RENDERIZAR TODOS
-    // ========================================
-
-    renderizarClientes(
-      clientesBase
-    );
+    preencherBairros(clientes);
 
   } catch (erro) {
 
     console.error(
-      'ERRO AO CARREGAR CLIENTES'
+      'ERRO AO CARREGAR CLIENTES:',
+      erro
     );
-
-    console.error(erro);
-
   }
-
 }
 
-// ========================================
+
+// =====================================================
+// RENDERIZAR CLIENTES
+// =====================================================
+
+function renderizarClientes(lista) {
+
+  markers.clearLayers();
+
+  lista.forEach(cliente => {
+
+    // =====================================================
+    // VALIDAR COORDENADAS
+    // =====================================================
+
+    const lat =
+      parseFloat(cliente.latitude);
+
+    const lng =
+      parseFloat(cliente.longitude);
+
+    if (
+      isNaN(lat) ||
+      isNaN(lng)
+    ) {
+      return;
+    }
+
+    // =====================================================
+    // POPUP
+    // =====================================================
+
+    const popup = `
+
+      <div style="min-width:220px">
+
+        <b style="font-size:16px;">
+          ${cliente.fantasia || ''}
+        </b>
+
+        <br><br>
+
+        <b>RAZÃO:</b><br>
+        ${cliente.razao || ''}
+
+        <br><br>
+
+        <b>RAMO:</b><br>
+        ${cliente.ramo || ''}
+
+        <br><br>
+
+        <b>BAIRRO:</b><br>
+        ${cliente.bairro || ''}
+
+        <br><br>
+
+        <b>ENDEREÇO:</b><br>
+        ${cliente.endereco || ''}
+
+        <br><br>
+
+        <a
+          href="https://www.google.com/maps?q=${lat},${lng}"
+          target="_blank"
+        >
+          Abrir no Google Maps
+        </a>
+
+      </div>
+    `;
+
+    // =====================================================
+    // MARCADOR
+    // =====================================================
+
+    const marker =
+      L.marker([lat, lng])
+
+        .bindPopup(popup);
+
+    markers.addLayer(marker);
+  });
+
+  map.addLayer(markers);
+}
+
+
+// =====================================================
 // PREENCHER BAIRROS
-// ========================================
+// =====================================================
 
-function preencherBairros() {
-
-  // LIMPAR
-
-  bairroSelect.innerHTML = `
-    <option value="">
-      Todos os bairros
-    </option>
-  `;
-
-  // ========================================
-  // PEGAR BAIRROS ÚNICOS
-  // ========================================
+function preencherBairros(lista) {
 
   const bairros = [
 
     ...new Set(
 
-      clientesBase
-        .map(cliente =>
-          cliente.bairro
-        )
+      lista
+
+        .map(c => c.bairro)
+
         .filter(Boolean)
-
     )
+  ]
 
-  ];
+  .sort();
 
-  // ========================================
-  // ORDENAR
-  // ========================================
+  bairroFiltro.innerHTML =
 
-  bairros.sort();
-
-  // ========================================
-  // ADICIONAR OPTIONS
-  // ========================================
+    `
+      <option value="">
+        Todos os bairros
+      </option>
+    `;
 
   bairros.forEach(bairro => {
 
-    const option =
-      document.createElement(
-        'option'
-      );
+    bairroFiltro.innerHTML +=
 
-    option.value = bairro;
-
-    option.textContent =
-      bairro;
-
-    bairroSelect.appendChild(
-      option
-    );
-
+      `
+        <option value="${bairro}">
+          ${bairro}
+        </option>
+      `;
   });
-
 }
 
-// ========================================
-// RENDERIZAR CLIENTES
-// ========================================
 
-function renderizarClientes(clientes) {
-
-  // ========================================
-  // LIMPAR CLUSTERS
-  // ========================================
-
-  markers.clearLayers();
-
-  // ========================================
-  // LOOP CLIENTES
-  // ========================================
-
-  clientes.forEach(cliente => {
-
-    try {
-
-      // ========================================
-      // VALIDAR COORDENADAS
-      // ========================================
-
-      if (
-        cliente.latitude == null ||
-        cliente.longitude == null
-      ) return;
-
-      const latitude =
-        Number(cliente.latitude);
-
-      const longitude =
-        Number(cliente.longitude);
-
-      if (
-        isNaN(latitude) ||
-        isNaN(longitude)
-      ) return;
-
-      // ========================================
-      // CRIAR MARKER
-      // ========================================
-
-      const marker = L.marker([
-        latitude,
-        longitude
-      ]);
-
-      // ========================================
-      // POPUP
-      // ========================================
-
-      marker.bindPopup(`
-
-        <div style="min-width:220px">
-
-          <h3>
-            ${cliente.fantasia || ''}
-          </h3>
-
-          <p>
-            <b>Razão:</b><br>
-            ${cliente.razao || ''}
-          </p>
-
-          <p>
-            <b>Ramo:</b>
-            ${cliente.ramo || ''}
-          </p>
-
-          <p>
-            <b>Bairro:</b>
-            ${cliente.bairro || ''}
-          </p>
-
-          <p>
-            <b>Cidade:</b>
-            ${cliente.cidade || ''}
-          </p>
-
-          <p>
-            <b>Endereço:</b><br>
-            ${cliente.endereco || ''}
-          </p>
-
-          <a
-            href="https://www.google.com/maps?q=${latitude},${longitude}"
-            target="_blank"
-          >
-            Abrir no Google Maps
-          </a>
-
-        </div>
-
-      `);
-
-      // ========================================
-      // ADICIONAR NO CLUSTER
-      // ========================================
-
-      markers.addLayer(marker);
-
-    } catch (erroCliente) {
-
-      console.error(
-        'ERRO CLIENTE:',
-        cliente
-      );
-
-      console.error(
-        erroCliente
-      );
-
-    }
-
-  });
-
-  // ========================================
-  // AJUSTAR MAPA
-  // ========================================
-
-  if (
-    markers.getLayers().length > 0
-  ) {
-
-    map.fitBounds(
-      markers.getBounds(),
-      {
-        padding: [40, 40]
-      }
-    );
-
-  }
-
-}
-
-// ========================================
-// APLICAR FILTROS
-// ========================================
+// =====================================================
+// FILTROS
+// =====================================================
 
 function aplicarFiltros() {
 
-  // ========================================
-  // VALORES
-  // ========================================
+  const busca =
 
-  const textoBusca =
     buscaInput.value
-      .toLowerCase()
-      .trim();
+      .trim()
+      .toUpperCase();
 
-  const bairroSelecionado =
-    bairroSelect.value;
+  const bairro =
 
-  // ========================================
-  // FILTRAR
-  // ========================================
+    bairroFiltro.value;
 
   const filtrados =
-    clientesBase.filter(cliente => {
 
-      // ========================================
-      // TEXTO BUSCA
-      // ========================================
-
-      const textoCliente = `
-
-        ${cliente.fantasia || ''}
-        ${cliente.razao || ''}
-        ${cliente.bairro || ''}
-        ${cliente.ramo || ''}
-        ${cliente.endereco || ''}
-
-      `
-      .toLowerCase();
+    clientes.filter(cliente => {
 
       const matchBusca =
-        textoCliente.includes(
-          textoBusca
-        );
 
-      // ========================================
-      // FILTRO BAIRRO
-      // ========================================
+        !busca ||
+
+        (
+          cliente.razao &&
+          cliente.razao
+            .toUpperCase()
+            .includes(busca)
+        ) ||
+
+        (
+          cliente.fantasia &&
+          cliente.fantasia
+            .toUpperCase()
+            .includes(busca)
+        );
 
       const matchBairro =
 
-        !bairroSelecionado ||
+        !bairro ||
 
-        cliente.bairro ===
-        bairroSelecionado;
+        cliente.bairro === bairro;
 
       return (
         matchBusca &&
         matchBairro
       );
-
     });
 
-  // ========================================
-  // RENDERIZAR FILTRADOS
-  // ========================================
-
-  renderizarClientes(
-    filtrados
-  );
-
+  renderizarClientes(filtrados);
 }
 
-// ========================================
+
+// =====================================================
 // EVENTOS
-// ========================================
+// =====================================================
 
 buscaInput.addEventListener(
   'input',
   aplicarFiltros
 );
 
-bairroSelect.addEventListener(
+bairroFiltro.addEventListener(
   'change',
   aplicarFiltros
 );
 
-// ========================================
+
+// =====================================================
 // INICIAR
-// ========================================
+// =====================================================
 
 carregarClientes();
