@@ -1,6 +1,5 @@
 <!-- ===================================================== -->
 <!-- INDEX.HTML -->
-<!-- MAPA_CLIENTES_WEB -->
 <!-- ===================================================== -->
 
 <!DOCTYPE html>
@@ -37,12 +36,12 @@
   />
 
   <!-- ===================================================== -->
-  <!-- CSS COM CACHE BUST -->
+  <!-- CSS -->
   <!-- ===================================================== -->
 
   <link
     rel="stylesheet"
-    href="style.css?v=1.0.1"
+    href="style.css?v=1.0.2"
   />
 
 </head>
@@ -59,19 +58,34 @@
 
     <div class="filtros">
 
+      <!-- BUSCA -->
+
       <input
         type="text"
         id="busca"
         placeholder="Buscar cliente..."
       />
 
-      <select id="bairroFiltro">
+      <!-- CIDADES -->
 
-        <option value="">
-          Todos os bairros
-        </option>
+      <select
+        id="cidadeFiltro"
+        multiple
+      ></select>
 
-      </select>
+      <!-- BAIRROS -->
+
+      <select
+        id="bairroFiltro"
+        multiple
+      ></select>
+
+      <!-- RAMOS -->
+
+      <select
+        id="ramoFiltro"
+        multiple
+      ></select>
 
     </div>
 
@@ -92,10 +106,10 @@
   <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
   <!-- ===================================================== -->
-  <!-- APP JS COM CACHE BUST -->
+  <!-- APP -->
   <!-- ===================================================== -->
 
-  <script src="app.js?v=1.0.1"></script>
+  <script src="app.js?v=1.0.2"></script>
 
 </body>
 
