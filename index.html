@@ -1,3 +1,8 @@
+<!-- ===================================================== -->
+<!-- INDEX.HTML -->
+<!-- MAPA_CLIENTES_WEB -->
+<!-- ===================================================== -->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -10,73 +15,57 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>
-    MAPA DE CLIENTES
-  </title>
+  <title>MAPA DE CLIENTES</title>
 
-  <!-- ===================================== -->
-  <!-- LEAFLET CSS -->
-  <!-- ===================================== -->
+  <!-- ===================================================== -->
+  <!-- LEAFLET -->
+  <!-- ===================================================== -->
 
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-
-  <!-- ===================================== -->
-  <!-- MARKER CLUSTER CSS -->
-  <!-- ===================================== -->
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
   />
 
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"
   />
-
-  <!-- ===================================== -->
-  <!-- CSS LOCAL -->
-  <!-- ===================================== -->
 
   <link
     rel="stylesheet"
-    href="style.css"
+    href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"
+  />
+
+  <!-- ===================================================== -->
+  <!-- CSS COM CACHE BUST -->
+  <!-- ===================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="style.css?v=1.0.1"
   />
 
 </head>
 
 <body>
 
-  <!-- ===================================== -->
-  <!-- TOPO -->
-  <!-- ===================================== -->
+  <!-- ===================================================== -->
+  <!-- TOPBAR -->
+  <!-- ===================================================== -->
 
   <div class="topbar">
 
-    <h1>
-      MAPA DE CLIENTES
-    </h1>
-
-    <!-- ===================================== -->
-    <!-- FILTROS -->
-    <!-- ===================================== -->
+    <h1>MAPA DE CLIENTES</h1>
 
     <div class="filtros">
 
-      <!-- BUSCA -->
-
       <input
         type="text"
-        id="buscaCliente"
+        id="busca"
         placeholder="Buscar cliente..."
       />
 
-      <!-- BAIRROS -->
-
-      <select id="filtroBairro">
+      <select id="bairroFiltro">
 
         <option value="">
           Todos os bairros
@@ -88,29 +77,25 @@
 
   </div>
 
-  <!-- ===================================== -->
+  <!-- ===================================================== -->
   <!-- MAPA -->
-  <!-- ===================================== -->
+  <!-- ===================================================== -->
 
   <div id="map"></div>
 
-  <!-- ===================================== -->
-  <!-- LEAFLET JS -->
-  <!-- ===================================== -->
+  <!-- ===================================================== -->
+  <!-- LEAFLET -->
+  <!-- ===================================================== -->
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- ===================================== -->
-  <!-- MARKER CLUSTER JS -->
-  <!-- ===================================== -->
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <!-- ===================================================== -->
+  <!-- APP JS COM CACHE BUST -->
+  <!-- ===================================================== -->
 
-  <!-- ===================================== -->
-  <!-- APP -->
-  <!-- ===================================== -->
-
-  <script src="app.js"></script>
+  <script src="app.js?v=1.0.1"></script>
 
 </body>
 
