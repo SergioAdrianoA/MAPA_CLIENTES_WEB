@@ -33,7 +33,7 @@ document.addEventListener(
     ).addTo(map);
 
     // =====================================================
-    // CLUSTER
+    // CLUSTERS
     // =====================================================
 
     const markers =
@@ -46,8 +46,14 @@ document.addEventListener(
     const buscaInput =
       document.getElementById('busca');
 
+    const cidadeFiltro =
+      document.getElementById('cidadeFiltro');
+
     const bairroFiltro =
       document.getElementById('bairroFiltro');
+
+    const ramoFiltro =
+      document.getElementById('ramoFiltro');
 
     // =====================================================
     // CLIENTES
@@ -73,7 +79,7 @@ document.addEventListener(
 
         renderizarClientes(clientes);
 
-        preencherBairros(clientes);
+        preencherFiltros(clientes);
 
       } catch (erro) {
 
@@ -100,9 +106,9 @@ document.addEventListener(
         const lng =
           parseFloat(cliente.longitude);
 
-        // ===============================================
+        // =================================================
         // IGNORA COORDENADAS INVÁLIDAS
-        // ===============================================
+        // =================================================
 
         if (
           isNaN(lat) ||
@@ -111,9 +117,13 @@ document.addEventListener(
           return;
         }
 
+        // =================================================
+        // POPUP
+        // =================================================
+
         const popup = `
 
-          <div style="min-width:220px">
+          <div style="min-width:220px;">
 
             <b style="font-size:16px;">
               ${cliente.fantasia || ''}
@@ -128,6 +138,11 @@ document.addEventListener(
 
             <b>RAMO:</b><br>
             ${cliente.ramo || ''}
+
+            <br><br>
+
+            <b>CIDADE:</b><br>
+            ${cliente.cidade || ''}
 
             <br><br>
 
@@ -151,6 +166,10 @@ document.addEventListener(
           </div>
         `;
 
+        // =================================================
+        // MARCADOR
+        // =================================================
+
         const marker =
           L.marker([lat, lng])
 
@@ -163,43 +182,83 @@ document.addEventListener(
     }
 
     // =====================================================
-    // BAIRROS
+    // PREENCHER FILTROS
     // =====================================================
 
-    function preencherBairros(lista) {
+    function preencherFiltros(lista) {
 
-      const bairros = [
+      preencherSelect(
+
+        cidadeFiltro,
+
+        lista.map(c => c.cidade),
+
+        'Todas as cidades'
+      );
+
+      preencherSelect(
+
+        bairroFiltro,
+
+        lista.map(c => c.bairro),
+
+        'Todos os bairros'
+      );
+
+      preencherSelect(
+
+        ramoFiltro,
+
+        lista.map(c => c.ramo),
+
+        'Todos os ramos'
+      );
+    }
+
+    // =====================================================
+    // PREENCHER SELECT
+    // =====================================================
+
+    function preencherSelect(
+      select,
+      valores
+    ) {
+
+      const itens = [
 
         ...new Set(
 
-          lista
-
-            .map(c => c.bairro)
-
-            .filter(Boolean)
+          valores.filter(Boolean)
         )
       ]
 
       .sort();
 
-      bairroFiltro.innerHTML =
+      select.innerHTML = '';
 
-        `
-          <option value="">
-            Todos os bairros
-          </option>
-        `;
+      itens.forEach(item => {
 
-      bairros.forEach(bairro => {
-
-        bairroFiltro.innerHTML +=
+        select.innerHTML +=
 
           `
-            <option value="${bairro}">
-              ${bairro}
+            <option value="${item}">
+              ${item}
             </option>
           `;
       });
+    }
+
+    // =====================================================
+    // OBTER MULTISELECT
+    // =====================================================
+
+    function obterValoresSelecionados(select) {
+
+      return Array.from(
+
+        select.selectedOptions
+
+      ).map(option => option.value);
     }
 
     // =====================================================
@@ -214,13 +273,28 @@ document.addEventListener(
           .trim()
           .toUpperCase();
 
-      const bairro =
+      const cidades =
+        obterValoresSelecionados(
+          cidadeFiltro
+        );
 
-        bairroFiltro.value;
+      const bairros =
+        obterValoresSelecionados(
+          bairroFiltro
+        );
+
+      const ramos =
+        obterValoresSelecionados(
+          ramoFiltro
+        );
 
       const filtrados =
 
         clientes.filter(cliente => {
+
+          // ===============================================
+          // BUSCA
+          // ===============================================
 
           const matchBusca =
 
@@ -240,15 +314,48 @@ document.addEventListener(
                 .includes(busca)
             );
 
+          // ===============================================
+          // CIDADE
+          // ===============================================
+
+          const matchCidade =
+
+            cidades.length === 0 ||
+
+            cidades.includes(
+              cliente.cidade
+            );
+
+          // ===============================================
+          // BAIRRO
+          // ===============================================
+
           const matchBairro =
 
-            !bairro ||
+            bairros.length === 0 ||
 
-            cliente.bairro === bairro;
+            bairros.includes(
+              cliente.bairro
+            );
+
+          // ===============================================
+          // RAMO
+          // ===============================================
+
+          const matchRamo =
+
+            ramos.length === 0 ||
+
+            ramos.includes(
+              cliente.ramo
+            );
 
           return (
+
             matchBusca &&
-            matchBairro
+            matchCidade &&
+            matchBairro &&
+            matchRamo
           );
         });
 
@@ -264,7 +371,17 @@ document.addEventListener(
       aplicarFiltros
     );
 
+    cidadeFiltro.addEventListener(
+      'change',
+      aplicarFiltros
+    );
+
     bairroFiltro.addEventListener(
+      'change',
+      aplicarFiltros
+    );
+
+    ramoFiltro.addEventListener(
       'change',
       aplicarFiltros
     );
