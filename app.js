@@ -18,7 +18,7 @@ document.addEventListener(
     );
 
     // =====================================================
-    // TILE LAYER
+    // TILE
     // =====================================================
 
     L.tileLayer(
@@ -33,7 +33,7 @@ document.addEventListener(
     ).addTo(map);
 
     // =====================================================
-    // CLUSTERS
+    // CLUSTER
     // =====================================================
 
     const markers =
@@ -62,6 +62,24 @@ document.addEventListener(
     let clientes = [];
 
     // =====================================================
+    // DROPDOWN
+    // =====================================================
+
+    document.querySelectorAll('.dropdown-btn')
+
+      .forEach(btn => {
+
+        btn.addEventListener(
+          'click',
+          () => {
+
+            btn.parentElement
+              .classList.toggle('active');
+          }
+        );
+      });
+
+    // =====================================================
     // CARREGAR CLIENTES
     // =====================================================
 
@@ -77,188 +95,225 @@ document.addEventListener(
         clientes =
           await response.json();
 
-        renderizarClientes(clientes);
+        preencherFiltros();
 
-        preencherFiltros(clientes);
+        renderizarClientes(clientes);
 
       } catch (erro) {
 
         console.error(
-          'ERRO AO CARREGAR CLIENTES:',
           erro
         );
       }
     }
 
     // =====================================================
-    // RENDERIZAR CLIENTES
-    // =====================================================
-
-    function renderizarClientes(lista) {
-
-      markers.clearLayers();
-
-      lista.forEach(cliente => {
-
-        const lat =
-          parseFloat(cliente.latitude);
-
-        const lng =
-          parseFloat(cliente.longitude);
-
-        // =================================================
-        // IGNORA COORDENADAS INVÁLIDAS
-        // =================================================
-
-        if (
-          isNaN(lat) ||
-          isNaN(lng)
-        ) {
-          return;
-        }
-
-        // =================================================
-        // POPUP
-        // =================================================
-
-        const popup = `
-
-          <div style="min-width:220px;">
-
-            <b style="font-size:16px;">
-              ${cliente.fantasia || ''}
-            </b>
-
-            <br><br>
-
-            <b>RAZÃO:</b><br>
-            ${cliente.razao || ''}
-
-            <br><br>
-
-            <b>RAMO:</b><br>
-            ${cliente.ramo || ''}
-
-            <br><br>
-
-            <b>CIDADE:</b><br>
-            ${cliente.cidade || ''}
-
-            <br><br>
-
-            <b>BAIRRO:</b><br>
-            ${cliente.bairro || ''}
-
-            <br><br>
-
-            <b>ENDEREÇO:</b><br>
-            ${cliente.endereco || ''}
-
-            <br><br>
-
-            <a
-              href="https://www.google.com/maps?q=${lat},${lng}"
-              target="_blank"
-            >
-              Abrir no Google Maps
-            </a>
-
-          </div>
-        `;
-
-        // =================================================
-        // MARCADOR
-        // =================================================
-
-        const marker =
-          L.marker([lat, lng])
-
-            .bindPopup(popup);
-
-        markers.addLayer(marker);
-      });
-
-      map.addLayer(markers);
-    }
-
-    // =====================================================
     // PREENCHER FILTROS
     // =====================================================
 
-    function preencherFiltros(lista) {
+    function preencherFiltros() {
 
-      preencherSelect(
+      criarCheckboxes(
 
         cidadeFiltro,
 
-        lista.map(c => c.cidade),
+        clientes.map(c => c.cidade),
 
-        'Todas as cidades'
+        'cidade'
       );
 
-      preencherSelect(
+      criarCheckboxes(
 
         bairroFiltro,
 
-        lista.map(c => c.bairro),
+        clientes.map(c => c.bairro),
 
-        'Todos os bairros'
+        'bairro'
       );
 
-      preencherSelect(
+      criarCheckboxes(
 
         ramoFiltro,
 
-        lista.map(c => c.ramo),
+        clientes.map(c => c.ramo),
 
-        'Todos os ramos'
+        'ramo'
       );
     }
 
     // =====================================================
-    // PREENCHER SELECT
+    // CRIAR CHECKBOXES
     // =====================================================
 
-    function preencherSelect(
-      select,
-      valores
+    function criarCheckboxes(
+      container,
+      lista,
+      tipo
     ) {
 
       const itens = [
 
         ...new Set(
 
-          valores.filter(Boolean)
+          lista.filter(Boolean)
         )
       ]
 
       .sort();
 
-      select.innerHTML = '';
+      container.innerHTML = '';
+
+      // ===================================================
+      // TODOS
+      // ===================================================
+
+      container.innerHTML += `
+
+        <label class="checkbox-item">
+
+          <input
+            type="checkbox"
+            class="${tipo}"
+            value="TODOS"
+            checked
+          />
+
+          TODOS
+
+        </label>
+      `;
+
+      // ===================================================
+      // ITENS
+      // ===================================================
 
       itens.forEach(item => {
 
-        select.innerHTML +=
+        container.innerHTML += `
 
-          `
-            <option value="${item}">
-              ${item}
-            </option>
-          `;
+          <label class="checkbox-item">
+
+            <input
+              type="checkbox"
+              class="${tipo}"
+              value="${item}"
+            />
+
+            ${item}
+
+          </label>
+        `;
+      });
+
+      // ===================================================
+      // EVENTOS
+      // ===================================================
+
+      const checkboxes =
+
+        container.querySelectorAll(
+          `.${tipo}`
+        );
+
+      checkboxes.forEach(cb => {
+
+        cb.addEventListener(
+          'change',
+          () => {
+
+            controlarTodos(
+              checkboxes
+            );
+
+            aplicarFiltros();
+          }
+        );
       });
     }
 
     // =====================================================
-    // OBTER MULTISELECT
+    // CONTROLAR TODOS
     // =====================================================
 
-    function obterValoresSelecionados(select) {
+    function controlarTodos(
+      checkboxes
+    ) {
+
+      const todos =
+
+        Array.from(checkboxes)
+
+          .find(c =>
+
+            c.value === 'TODOS'
+          );
+
+      const outros =
+
+        Array.from(checkboxes)
+
+          .filter(c =>
+
+            c.value !== 'TODOS'
+          );
+
+      // ===================================================
+      // TODOS MARCADO
+      // ===================================================
+
+      if (
+        todos.checked &&
+        event.target.value === 'TODOS'
+      ) {
+
+        outros.forEach(c => {
+
+          c.checked = false;
+        });
+      }
+
+      // ===================================================
+      // OUTRO MARCADO
+      // ===================================================
+
+      if (
+        event.target.value !== 'TODOS'
+      ) {
+
+        todos.checked = false;
+      }
+
+      // ===================================================
+      // NENHUM
+      // ===================================================
+
+      const algumMarcado =
+
+        outros.some(c => c.checked);
+
+      if (!algumMarcado) {
+
+        todos.checked = true;
+      }
+    }
+
+    // =====================================================
+    // OBTER SELECIONADOS
+    // =====================================================
+
+    function obterSelecionados(classe) {
 
       return Array.from(
 
-        select.selectedOptions
+        document.querySelectorAll(
+          `.${classe}:checked`
+        )
 
-      ).map(option => option.value);
+      )
+
+      .map(c => c.value)
+
+      .filter(v => v !== 'TODOS');
     }
 
     // =====================================================
@@ -274,19 +329,13 @@ document.addEventListener(
           .toUpperCase();
 
       const cidades =
-        obterValoresSelecionados(
-          cidadeFiltro
-        );
+        obterSelecionados('cidade');
 
       const bairros =
-        obterValoresSelecionados(
-          bairroFiltro
-        );
+        obterSelecionados('bairro');
 
       const ramos =
-        obterValoresSelecionados(
-          ramoFiltro
-        );
+        obterSelecionados('ramo');
 
       const filtrados =
 
@@ -363,26 +412,90 @@ document.addEventListener(
     }
 
     // =====================================================
+    // RENDERIZAR
+    // =====================================================
+
+    function renderizarClientes(lista) {
+
+      markers.clearLayers();
+
+      lista.forEach(cliente => {
+
+        const lat =
+          parseFloat(cliente.latitude);
+
+        const lng =
+          parseFloat(cliente.longitude);
+
+        if (
+          isNaN(lat) ||
+          isNaN(lng)
+        ) {
+          return;
+        }
+
+        const popup = `
+
+          <div style="min-width:220px;">
+
+            <b style="font-size:16px;">
+              ${cliente.fantasia || ''}
+            </b>
+
+            <br><br>
+
+            <b>RAZÃO:</b><br>
+            ${cliente.razao || ''}
+
+            <br><br>
+
+            <b>RAMO:</b><br>
+            ${cliente.ramo || ''}
+
+            <br><br>
+
+            <b>CIDADE:</b><br>
+            ${cliente.cidade || ''}
+
+            <br><br>
+
+            <b>BAIRRO:</b><br>
+            ${cliente.bairro || ''}
+
+            <br><br>
+
+            <b>ENDEREÇO:</b><br>
+            ${cliente.endereco || ''}
+
+            <br><br>
+
+            <a
+              href="https://www.google.com/maps?q=${lat},${lng}"
+              target="_blank"
+            >
+              Abrir no Google Maps
+            </a>
+
+          </div>
+        `;
+
+        const marker =
+          L.marker([lat, lng])
+
+            .bindPopup(popup);
+
+        markers.addLayer(marker);
+      });
+
+      map.addLayer(markers);
+    }
+
+    // =====================================================
     // EVENTOS
     // =====================================================
 
     buscaInput.addEventListener(
       'input',
-      aplicarFiltros
-    );
-
-    cidadeFiltro.addEventListener(
-      'change',
-      aplicarFiltros
-    );
-
-    bairroFiltro.addEventListener(
-      'change',
-      aplicarFiltros
-    );
-
-    ramoFiltro.addEventListener(
-      'change',
       aplicarFiltros
     );
 
